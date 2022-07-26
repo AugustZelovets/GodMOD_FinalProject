@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "4.06"
+requests="*"
+pillow="*"
+psycopg2-binary = "*"
+django-phonenumber-field="6.3.0"
+django-phonenumbers = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
