@@ -38,8 +38,11 @@ class Category(models.Model):
 
 class Mod(models.Model):
     name = models.CharField(max_length=30)
-    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default='SET_CATEGORY', )
+    image = models.ImageField(blank=True, upload_to='MainModImages/%Y/%m/%d')
+
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=False )
+
     author = models.CharField(max_length=30)
     tag = models.ManyToManyField(Tag, blank=True)
     likes = models.IntegerField(default=0, editable=False)
@@ -54,8 +57,8 @@ class Mod(models.Model):
 
 class ModVersion(models.Model):
     mod = models.ForeignKey(Mod, on_delete=models.CASCADE)
-    version = models.CharField(max_length=10, default='1.0')
-    files = models.FileField()
+    version = models.CharField(max_length=10, default='1.0', )
+    files = models.FileField(null=True, blank=True, upload_to='ModFiles/%Y/%m/%d')
     created_at = models.DateField(auto_now=True)
     updated_at = models.DateField(auto_now_add=True)
     changelogs = models.TextField()

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create </title>
+</head>
+<body>
+
+<form method="POST" enctype="multipart/form-data" action="{% url 'create_mod' %}">
+    {%csrf_token%}
+    {{f}}
+    <div class="row">
+        {% for f in form %}
+
+        <div class="span3">{{f.label}} {{f}}
+            {% if f.errors%}
+            {%for v in f.errors %}
+            <br><span style="color:red ;">{{v}} </span>
+            {%endfor%}
+            {%endif%}
+        </div>
+        {%endfor%}
+    </div>
+
+    <h2>modversion</h2>
+    <table class="table-striped">
+        <table>
+            {%for f2 in inlines %}
+            <tr id="{{f2.prefix}}-row">
+                {% for i in f2%}
+                <td>
+                    {{i}} {%if i.errors%} <span style="color: :red;">{{i.errors}}</span>{%endif%}
+                </td>
+                {%endfor%}
+            </tr>
+            {%endfor%}
+        </table>
+    </table>
+    {{inlines.management_form}}
+    <input type="submit" class="btn btn_primary" value="Go">
+</form>
+
+</body>
+</html>

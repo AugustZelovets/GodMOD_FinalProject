@@ -3,7 +3,11 @@ from django.shortcuts import render
 from page.models import Page
 
 
-def index(request):
+
+
+
+
+def get_page(request):
     page = Page.objects.get(pk=1)
     mod = page.mod
     modversion = mod.modversion_set.all()
