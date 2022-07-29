@@ -38,7 +38,7 @@ class Category(models.Model):
 
 class Mod(models.Model):
     name = models.CharField(max_length=30)
-    image = models.ImageField(blank=True, upload_to='MainModImages/%Y/%m/%d')
+    image = models.ImageField(blank=True, upload_to='ModMainImages/%Y/%m/%d')
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=False )

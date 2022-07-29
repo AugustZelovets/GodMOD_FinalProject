@@ -9,10 +9,16 @@ class ModVersionInline(ModelForm):
         fields = '__all__'
 
 
-class ModForm(ModelForm):
+class ModVersionCreationForm(ModelForm):
+    class Meta:
+        model = ModVersion
+        fields = '__all__'
+
+
+class ModCreationForm(ModelForm):
     class Meta:
         model = Mod
-        fields = '__all__'
+        exclude = 'author',
 
 
 ModInlineFormSet = inlineformset_factory(Mod, ModVersion,
