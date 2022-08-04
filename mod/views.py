@@ -1,7 +1,9 @@
+import requests
 from django.forms import formset_factory
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 
 from mod.forms import ModInlineFormSet
 from .models import Mod, ModVersion
@@ -12,6 +14,12 @@ class AllMods(ListView):
     model = Mod
     template_name = 'mod/all_mods.html'
     context_object_name = 'mods'
+
+
+class GetModDetails(DetailView):
+    model = Mod
+    template_name = 'mod/get_mod.html'
+    context_object_name = 'mod'
 
 
 class CreateModView(CreateView):
@@ -32,72 +40,38 @@ class CreateModVersionView(CreateView):
     success_url = reverse_lazy('mod:all_mods')
 
 
+def create_mod_version(request, mod_slug):
+    mod = Mod.objects.get(slug=mod_slug, author=request.user)
+    if request.method == 'POST':
+        form = ModVersionCreationForm(request.POST)  # request.FILES)
+        if form.is_valid():
+            new_mod_version = form.save(commit=False)
+            new_mod_version.mod = Mod.objects.get(slug=mod_slug)
+            new_mod_version.save()
+
+            return redirect('mod:all_mods')
+        return render(request, 'mod/create_mod_version.html', {'form': form, 'title': 'Add new post'})
+
+    form = ModVersionCreationForm()
+
+    return render(request, 'mod/create_mod_version.html', {'form': form, 'title': 'Add new post', 'slug':mod_slug})
 
 
-
-# class CreateModView(CreateView):
-#     template_name = 'mod/create_mod.html'
-#     model = Mod
-#     form_class = ModForm
-#
-#     def get_success_url(self):
-#         return reverse('all_mods')
-#
-#     def form_valid(self, form):
-#         ctx = self.get_context_data()
-#         print(ctx)
-#         inlines = ctx['inlines']
-#         if inlines.is_valid() and form.is_valid():
-#             print(form.cleaned_data)
-#             print('MODMOD', inlines.cleaned_data[0]['mod'], )
-#
-#             self.object = form.save(commit=False)
-#             inlines.cleaned_data[0]['mod'] = form.cleaned_data['name']
-#             inlines.cleaned_data[0]['id'] = 3
-#
-#             #inlines.save()
-#             self.object.save()
-#             print('self.object',
-#                 self.object
-#             )
-#             print('MODMOD', inlines.cleaned_data, )
-#
-#             return redirect(self.get_success_url())
-#         else:
-#             return self.render_to_response(self.get_context_data(form=form))
-#
-#     def form_invalid(self, form):
-#         return self.render_to_response(self.get_context_data(form=form))
-#
-#     def get_context_data(self, **kwargs):
-#         ctx = super(CreateModView, self).get_context_data(**kwargs)
-#         if self.request.POST:
-#             ctx['form'] = ModForm(self.request.POST, self.request.FILES,)
-#             ctx['inlines'] = ModInlineFormSet(self.request.POST, self.request.FILES,)
-#         else:
-#             ctx['form'] = ModForm()
-#             ctx['inlines'] = ModInlineFormSet()
-#         return ctx
+def add_mod(request):
+    if request.method == 'POST':
+        form = ModCreationForm(request.POST)  # request.FILES)
+        if form.is_valid():
+            new_mod = form.save(commit=False)
+            new_mod.save()
+            form.save_m2m()
 
 
-# def manage_articles(request):
-#     ModFormSet = formset_factory(ModForm)
-#     ModVersionFormSet = formset_factory(ModVersionForm)
-#
-#     if request.method == 'POST':
-#         mod_formset = ModFormSet(request.POST, request.FILES, prefix='mod')
-#         modversion_formset = ModVersionFormSet(request.POST, request.FILES, prefix='modversion')
-#         if mod_formset.is_valid() and modversion_formset.is_valid():
-#             new_mod = mod_formset.save()
-#             new_modversion_formset = modversion_formset.save()
-#
-#     else:
-#         mod_formset = ModFormSet(prefix='mod')
-#         modversion_formset = ModVersionFormSet(prefix='modversion')
-#     return render(request, 'mod/manage_articles.html', {
-#         'mod_formset': mod_formset,
-#         'modversion_formset': modversion_formset,
-#     })
+            return redirect(reverse('mod:create_mod_version', kwargs={'slug': new_mod.slug}))
+
+        return render(request, 'mod/create_mod.html', {'form': form, 'title': 'Add new post'})
+    form = ModCreationForm()
+    return render(request, 'mod/create_mod.html', {'form': form, 'title': 'Add new post'})
+
 
 
 class AllGames(ListView):
@@ -105,15 +79,12 @@ class AllGames(ListView):
     template_name = 'mod/all_games.html'
     context_object_name = 'games'
 
-# class AllModsForGame
-#
-# class ModsByCategory
-#
-#
 
 
 
 def updated_followings():
     pass
+
+
 
 

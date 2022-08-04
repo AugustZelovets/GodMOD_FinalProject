@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Game(models.Model):
@@ -37,12 +38,12 @@ class Category(models.Model):
 
 
 class Mod(models.Model):
-    name = models.CharField(max_length=30)
-    image = models.ImageField(blank=True, upload_to='ModMainImages/%Y/%m/%d')
+    name = models.CharField(max_length=30, unique=True,)
+    slug = models.SlugField(max_length=30, unique=True)
 
+    image = models.ImageField(blank=True, upload_to='ModMainImages/%Y/%m/%d')
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=False )
-
     author = models.CharField(max_length=30)
     tag = models.ManyToManyField(Tag, blank=True)
     likes = models.IntegerField(default=0, editable=False)
@@ -51,12 +52,17 @@ class Mod(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('mod:get_mod', kwargs={'slug': self.slug})
+
     class Meta:
         pass
 
 
 class ModVersion(models.Model):
     mod = models.ForeignKey(Mod, on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=30, unique=True)
+
     version = models.CharField(max_length=10, default='1.0', )
     files = models.FileField(null=True, blank=True, upload_to='ModFiles/%Y/%m/%d')
     created_at = models.DateField(auto_now=True)
