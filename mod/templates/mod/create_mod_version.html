@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Add new mod version</h1>
-<form  action="{% url 'mod:create_mod_version' %}" method="post" enctype="multipart/form-data" >
+<form  action="{% url 'modif:create_mod_version' slug=slug%}" method="post" enctype="multipart/form-data" >
     {% csrf_token %}
     {{ form.as_p }}
     <input  type="submit" value="Submit">

@@ -3,18 +3,16 @@ from django.urls import reverse
 
 
 class Game(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
+    slug = models.SlugField(max_length=30, unique=True)
     description = models.TextField()
-    image = models.ImageField()
+    image = models.ImageField(null=True, blank=True, upload_to='GameImages/%Y/%m/%d')
     date = models.DateField()
     genre = models.CharField(max_length=30)
     team = models.CharField(max_length=30)
 
     def __str__(self):
         return self.name
-
-    class Meta:
-        pass
 
 
 class Tag(models.Model):
@@ -28,7 +26,9 @@ class Tag(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
+    slug = models.SlugField(max_length=30, unique=True)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -40,9 +40,8 @@ class Category(models.Model):
 class Mod(models.Model):
     name = models.CharField(max_length=30, unique=True,)
     slug = models.SlugField(max_length=30, unique=True)
+    image = models.ImageField(null=True, blank=True, upload_to='ModMainImages/%Y/%m/%d')
 
-    image = models.ImageField(blank=True, upload_to='ModMainImages/%Y/%m/%d')
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=False )
     author = models.CharField(max_length=30)
     tag = models.ManyToManyField(Tag, blank=True)
@@ -53,7 +52,7 @@ class Mod(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('mod:get_mod', kwargs={'slug': self.slug})
+        return reverse('modif:get_mod', kwargs={'slug': self.slug})
 
     class Meta:
         pass
@@ -61,8 +60,7 @@ class Mod(models.Model):
 
 class ModVersion(models.Model):
     mod = models.ForeignKey(Mod, on_delete=models.CASCADE)
-    slug = models.SlugField(max_length=30, unique=True)
-
+    #slug = models.SlugField(max_length=30, unique=True)
     version = models.CharField(max_length=10, default='1.0', )
     files = models.FileField(null=True, blank=True, upload_to='ModFiles/%Y/%m/%d')
     created_at = models.DateField(auto_now=True)
@@ -74,7 +72,7 @@ class ModVersion(models.Model):
         return f' {self.mod} v.{self.version}'
 
     class Meta:
-        pass
+        unique_together = 'mod', 'version'
 
 
 class Download(models.Model):

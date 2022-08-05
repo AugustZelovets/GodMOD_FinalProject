@@ -5,8 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>Add new mod</h1>
-<form  action="{% url 'modif:create_mod' slug=slug %}" method="post" enctype="multipart/form-data" >
+    <h1>chose game</h1>
+<form  action="{% url 'modif:chose_game' %}" method="post" enctype="multipart/form-data" >
     {% csrf_token %}
     {{ form.as_p }}
     <input  type="submit" value="Submit">

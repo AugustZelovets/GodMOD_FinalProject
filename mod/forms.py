@@ -11,11 +11,24 @@ class ModVersionInline(forms.ModelForm):
         fields = '__all__'
 
 
+class ChoseGameForm(forms.ModelForm):
+
+    class Meta:
+        model = Category
+        fields = 'game',
+
+
+class AddCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
 class ModVersionCreationForm(forms.ModelForm):
 
     class Meta:
         model = ModVersion
-        fields = '__all__'
+        exclude = 'mod',
 
 
 class ModCreationForm(forms.ModelForm):
@@ -24,14 +37,12 @@ class ModCreationForm(forms.ModelForm):
         exclude = 'author',
 
 
-
-
-
 ModInlineFormSet = inlineformset_factory(Mod, ModVersion,
                                          form=ModVersionInline,
                                          extra=1,
                                          can_delete=False,
                                          fields='__all__')
+
 
 
 # class RecipeForm(ModelForm):
