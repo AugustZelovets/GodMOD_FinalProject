@@ -9,10 +9,13 @@
 </head>
 
 <body>
+<a href="{% url 'modif:all_mods'  %}">Home</a>
+
 {%for game in games%}
-{{game.name}}
+<a href="{{game.get_absolute_url}}">{{game.name}}</a>
 {%endfor%}
 
+ <a href="{% url 'modif:chose_game'  %}">Add mod</a>
 
 {% block content%}
 {% endblock%}

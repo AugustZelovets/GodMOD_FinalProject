@@ -1,14 +1,7 @@
 import re
 
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.contrib.auth.password_validation import UserAttributeSimilarityValidator, MinimumLengthValidator, \
-    CommonPasswordValidator, NumericPasswordValidator
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
-from django.utils import timezone
-from django.core import validators
-from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 from mod.models import Mod
 from user.utils import UsernameValidator

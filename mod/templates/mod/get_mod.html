@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{{mod.name}}
-</body>
-</html>
+
+
+
+
+{% extends 'mod/base.html' %}
+{% block title %}Mods{% endblock%}
+
+
+{% block content%}
+<br>
+{{mod.name}}<br>
+
+{%for modversion in mod_versions%}
+<ul>
+    <li>{{modversion.version}}</li>
+<li><a href="{{  modversion.files.url }}">Файл</a></li>
+    <li>{{modversion.created_at}}</li>
+    <li>{{modversion.updated_at}}</li>
+    <li>Changelogs: {{modversion.changelogs}}</li>
+    <li>Documentation: {{modversion.documentation}}</li>
+
+</ul>
+{%endfor%}
+
+{% endblock%}

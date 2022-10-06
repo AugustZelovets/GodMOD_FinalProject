@@ -6,10 +6,10 @@
 </head>
 <body>
     <h1>Add new mod</h1>
-<form  action="{% url 'modif:create_mod' slug=slug %}" method="post" enctype="multipart/form-data" >
+<form  action="{% url 'modif:add_mod' slug=slug %}" method="post" enctype="multipart/form-data" >
     {% csrf_token %}
     {{ form.as_p }}
-    <input  type="submit" value="Submit">
+    <input  type="submit" value="Next stage">
 </form>
 
 </body>

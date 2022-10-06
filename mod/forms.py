@@ -5,10 +5,6 @@ from django.forms import inlineformset_factory, ModelForm
 from .models import *
 
 
-class ModVersionInline(forms.ModelForm):
-    class Meta:
-        model = ModVersion
-        fields = '__all__'
 
 
 class ChoseGameForm(forms.ModelForm):
@@ -37,11 +33,13 @@ class ModCreationForm(forms.ModelForm):
         exclude = 'author',
 
 
-ModInlineFormSet = inlineformset_factory(Mod, ModVersion,
-                                         form=ModVersionInline,
-                                         extra=1,
-                                         can_delete=False,
-                                         fields='__all__')
+
+#
+# ModInlineFormSet = inlineformset_factory(Mod, ModVersion,
+#                                          form=ModVersionInline,
+#                                          extra=1,
+#                                          can_delete=False,
+#                                          fields='__all__')
 
 
 

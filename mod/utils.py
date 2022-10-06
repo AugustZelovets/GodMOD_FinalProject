@@ -9,9 +9,5 @@ class DataMixin:
         context = kwargs
         games = Game.objects.all()
 
-        # if not self.request.user.is_authenticated:
-        #     user_menu.pop(1)
-
-        #context['menu'] = user_menu
         context['games'] = games
         return context

@@ -22,7 +22,7 @@ from godmod import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('page.urls')),
-    path('mod/', include('mod.urls')),
+    path('mods/', include('mod.urls')),
     path('game/', include('mod.urls')),
 
     #path('user/', include('user.urls')),
